@@ -1,4 +1,5 @@
 const Session = require('../schema/session')
+const jwt = require('jsonwebtoken')
 
 const checkSession = async (req,res,next) => {
     let token = req.header('Authorization')
@@ -12,7 +13,14 @@ const checkSession = async (req,res,next) => {
     }
     next()
 }
+const getRequesterId = req => {
+    const token = req.header('Authorization').replace('basic ', "")
+    const decodedJwt = jwt.decode(token, { complete: true });
+    const id =  decodedJwt.payload['_id']
+    return id
+}
 
 module.exports = {
-    checkSession
+    checkSession,
+    getRequesterId
 }
