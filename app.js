@@ -9,6 +9,7 @@ const user = require("./routes/user")
 connectMongoose();
 
 //middlewear
+app.use('/uploads',express.static('uploads'))
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 

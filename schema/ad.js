@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+const ObjectId = mongoose.Schema.Types.ObjectId;
 
 const ad = new mongoose.Schema({
     title :{
@@ -21,6 +22,14 @@ const ad = new mongoose.Schema({
         type : String,
         required : true
     },
+    imgPath : {
+        type : String,
+        required : true
+    },
+    postedBy : {
+        type : String,
+        required : true
+    }
 
 })
 
