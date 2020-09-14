@@ -55,16 +55,33 @@ router.get("/", async (req, res) => {
     res.send(e);
   }
 });
-router.post('/delete/:id',async (req,res)=>{
+router.post('/delete/:id',checkSession,async (req,res)=>{
   const adId = req.params.id
-  const token = req.header('authorization').replace('basic ', "")
-  console.log('adID',adId)
-  const decodedJwt = jwt.decode(token, { complete: true });
 
-  res.send("ammar")
+  const token = req.header('Authorization').replace('basic ', "")
+  const decodedJwt = jwt.decode(token, { complete: true });
+  const postedBy =  decodedJwt.payload['_id']
+
+  try{
+    const deleteResult = await ad.deleteOne({ _id: adId , postedBy })
+    if(deleteResult.deletedCount != 0){
+      res.status(200).send(true)
+    }else{
+      res.status(400).send('can`t delete this ad')
+    }
+
+  }catch(e){
+    console.log("error in deleting ads", e);
+    res.status(400).send("something went wrong, tryagain");
+  }
+  res.send(postedBy)
 })
 
-router.post("/new", upload.single("image"), async (req, res) => {
+router.post("/new",checkSession, upload.single("image"), async (req, res) => {
+  const token = req.header('Authorization').replace('basic ', "")
+  const decodedJwt = jwt.decode(token, { complete: true });
+  const postedBy =  decodedJwt.payload['_id']
+
   const data = {
     title: req.body.title,
     des: req.body.des,
@@ -77,7 +94,7 @@ router.post("/new", upload.single("image"), async (req, res) => {
     location: req.body.location,
     price: req.body.price,
     imgPath: req.file.path,
-    postedBy: req.body.postedBy,
+    postedBy,
   };
   try {
     const tempAd = new ad(data);

@@ -1,7 +1,7 @@
 const Session = require('../schema/session')
 
 const checkSession = async (req,res,next) => {
-    let token = req.header('authorization')
+    let token = req.header('Authorization')
     if(!token){
         res.status(403).send(false)
     }
