@@ -81,7 +81,7 @@ router.post("/new",checkSession, upload.single("image"), async (req, res) => {
   const token = req.header('Authorization').replace('basic ', "")
   const decodedJwt = jwt.decode(token, { complete: true });
   const postedBy =  decodedJwt.payload['_id']
-
+  console.log("test")
   const data = {
     title: req.body.title,
     des: req.body.des,

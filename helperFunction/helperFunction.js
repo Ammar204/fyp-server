@@ -2,6 +2,7 @@ const Session = require('../schema/session')
 const jwt = require('jsonwebtoken')
 
 const checkSession = async (req,res,next) => {
+    console.log("ammar")
     let token = req.header('Authorization')
     if(!token){
         res.status(403).send(false)

@@ -89,16 +89,16 @@ router.post("/login", async (req, res) => {
       $or: [{ email: login }, { username: login }],
     });
     if (!findUser)
-      return res.status(401).send("username and password does not match");
+      return res.status(401).send({status:false,msg:"username and password does not match"});
     const validPassword = await bcrypt.compare(
       req.body.password,
       findUser.password
     );
     if (!validPassword)
-      return res.status(401).send("username and password does not match");
+      return res.status(401).send({status:false,msg:"username and password does not match"});
   } catch (e) {
     console.log("error in find user", e);
-    res.status(400).send("something went wrong, tryagain");
+    res.status(400).send({status:false,msg:"something went wrong, tryagain"});
   }
 
   // produce token
@@ -110,9 +110,9 @@ router.post("/login", async (req, res) => {
   });
   try {
     const savedtoken = await userSession.save();
-    res.status(200).send({ token });
+    res.status(200).send({status:true, token });
   } catch (err) {
-    res.status(406).send("token failed");
+    res.status(406).send({status:false,msg:"something went wrong, tryagain"});
   }
 });
 router.post("/new", async (req, res) => {
@@ -148,10 +148,10 @@ router.post("/new", async (req, res) => {
       country: req.body.country,
     });
     const savedUser = await tempUser.save();
-    res.send(savedUser);
+    res.send({status:true});
   } catch (e) {
     console.log("error in creating hash and saving user", e);
-    res.status(400).send("something went wrong, tryagain");
+    res.status(400).send({status:false,msg:"something went wrong,try again"});
   }
 });
 
